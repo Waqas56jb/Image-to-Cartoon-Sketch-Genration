@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cartoon Avatar Generator</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <!-- Custom CSS -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #f4f4f4, #e0e0e0);
+        min-height: 100vh;
+        padding: 20px;
+      }
+      h1 {
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+      #uploadForm {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      #cartoonImage {
+        margin-top: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+        display: none;
+        width: 300px; /* Medium size */
+        height: auto;
+      }
+      #downloadLink {
+        display: none;
+        margin-top: 20px;
+      }
+      .loader {
+        display: none;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #007bff;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .color-dropdown {
+        margin-bottom: 20px;
+      }
+      .color-dropdown .dropdown-menu {
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      .marquee {
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        background: rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        border-radius: 10px;
+        margin-top: 20px;
+      }
+      .marquee img {
+        display: inline-block;
+        width: 100px; /* Passport size */
+        height: 100px;
+        margin-right: 10px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      }
+      .showcase {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+      .showcase img {
+        width: 100px; /* Passport size */
+        height: 100px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      }
+      .showcase .download-btn {
+        margin-left: 10px;
+      }
+      .scrollable-list {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-top: 20px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+      }
+      .scrollable-list img {
+        width: 80px; /* Smaller size for list */
+        height: 80px;
+        margin-right: 10px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      }
+      .scrollable-list .download-btn {
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="text-center">Cartoon Avatar Generator</h1>
+
+      <!-- Color Theme Dropdown -->
+      <div class="color-dropdown text-center">
+        <div class="dropdown">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="colorDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Select Color Theme
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="colorDropdown">
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                data-colors="#1E3A8A,#F8B400,#E63946,#06D6A0,#8338EC"
+                >Blue Theme</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                data-colors="#14532D,#FFD700,#800020,#FF4500,#4682B4"
+                >Green Theme</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                data-colors="#7F1D1D,#32CD32,#00008B,#FFD700,#FF1493"
+                >Red Theme</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                data-colors="#713F12,#000000,#FFFFFF,#FF8C00,#00CED1"
+                >Yellow Theme</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                data-colors="#164E63,#FF6347,#9400D3,#2E8B57,#FFFF00"
+                >Cyan Theme</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                data-colors="#4C1D95,#DC143C,#20B2AA,#FF8C00,#7FFF00"
+                >Purple Theme</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                data-colors="#9A3412,#00FA9A,#8A2BE2,#DC143C,#FFD700"
+                >Orange Theme</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                data-colors="#3730A3,#8B0000,#FFD700,#008080,#DAA520"
+                >Indigo Theme</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                data-colors="#831843,#FF4500,#48D1CC,#32CD32,#8A2BE2"
+                >Pink Theme</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                data-colors="#115E59,#DA70D6,#20B2AA,#FF8C00,#9400D3"
+                >Teal Theme</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Upload Form -->
+      <div id="uploadForm">
+        <input
+          type="file"
+          id="imageInput"
+          accept="image/*"
+          class="form-control mb-3"
+        />
+        <button onclick="uploadImage()" class="btn btn-primary w-100">
+          <i class="fas fa-upload"></i> Upload & Convert
+        </button>
+      </div>
+
+      <!-- Loader -->
+      <div class="loader" id="loader"></div>
+
+      <!-- Cartoon Image -->
+      <img id="cartoonImage" class="img-fluid mx-auto d-block" />
+
+      <!-- Download Link -->
+      <a id="downloadLink" class="btn btn-success w-100">
+        <i class="fas fa-download"></i> Download Cartoon Avatar
+      </a>
+
+      <!-- Marquee for Last 5 Saved Images -->
+      <div class="marquee">
+        <div id="marqueeContent"></div>
+      </div>
+
+      <!-- Showcase for Last 5 Saved Images -->
+      <div class="showcase" id="showcase"></div>
+
+      <!-- Scrollable List for All Saved Images -->
+      <div class="scrollable-list" id="scrollableList"></div>
+    </div>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      // Color Theme Dropdown Functionality
+      document.querySelectorAll(".dropdown-item").forEach((item) => {
+        item.addEventListener("click", (e) => {
+          e.preventDefault();
+          const colors = e.target.getAttribute("data-colors").split(",");
+          document.body.style.background = `linear-gradient(135deg, ${colors[0]}, ${colors[1]})`;
+          document.querySelector("#uploadForm").style.background = colors[2];
+          document.querySelector("h1").style.color = colors[3];
+          document.querySelector("button.btn-primary").style.backgroundColor =
+            colors[4];
+        });
+      });
+
+      // Upload Image Function
+      function uploadImage() {
+        let input = document.getElementById("imageInput").files[0];
+        if (!input) {
+          alert("Please select an image.");
+          return;
+        }
+
+        // Show loader
+        document.getElementById("loader").style.display = "block";
+
+        let formData = new FormData();
+        formData.append("image", input);
+
+        fetch("/upload", { method: "POST", body: formData })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.cartoon_image) {
+              let imageUrl = "/static/output/" + data.cartoon_image;
+              document.getElementById("cartoonImage").src = imageUrl;
+              document.getElementById("cartoonImage").style.display = "block";
+
+              let downloadLink = document.getElementById("downloadLink");
+              downloadLink.href = "/download/" + data.cartoon_image;
+              downloadLink.style.display = "block";
+
+              // Update showcase and marquee
+              updateShowcase();
+            } else {
+              alert("Error processing image.");
+            }
+          })
+          .catch((error) => console.error("Error:", error))
+          .finally(() => {
+            // Hide loader
+            document.getElementById("loader").style.display = "none";
+          });
+      }
+
+      // Function to update showcase and marquee
+      function updateShowcase() {
+        fetch("/get-saved-images")
+          .then((response) => response.json())
+          .then((data) => {
+            const showcase = document.getElementById("showcase");
+            const marqueeContent = document.getElementById("marqueeContent");
+            const scrollableList = document.getElementById("scrollableList");
+
+            // Clear existing content
+            showcase.innerHTML = "";
+            marqueeContent.innerHTML = "";
+            scrollableList.innerHTML = "";
+
+            // Add last 5 images to showcase and marquee
+            data.slice(0, 5).forEach((image) => {
+              const imgElement = document.createElement("img");
+              imgElement.src = "/static/output/" + image;
+              showcase.appendChild(imgElement);
+
+              const marqueeImg = document.createElement("img");
+              marqueeImg.src = "/static/output/" + image;
+              marqueeContent.appendChild(marqueeImg);
+            });
+
+            // Add all images to scrollable list
+            data.forEach((image) => {
+              const listItem = document.createElement("div");
+              listItem.className = "d-flex align-items-center mb-2";
+
+              const imgElement = document.createElement("img");
+              imgElement.src = "/static/output/" + image;
+
+              const downloadBtn = document.createElement("button");
+              downloadBtn.className = "btn btn-sm btn-success download-btn";
+              downloadBtn.innerHTML =
+                '<i class="fas fa-download"></i> Download';
+              downloadBtn.onclick = () => {
+                window.location.href = "/download/" + image;
+              };
+
+              listItem.appendChild(imgElement);
+              listItem.appendChild(downloadBtn);
+              scrollableList.appendChild(listItem);
+            });
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      // Initial load of showcase and marquee
+      updateShowcase();
+    </script>
+  </body>
+</html>
